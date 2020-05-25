@@ -29,12 +29,14 @@ test("It constructs a verify request url", () => {
   const client = newClient();
   const url = client.verifyUrl("MyType", "12345");
   expect(url).toBeDefined();
+  expect(url).toMatch(/verify\?token=/);
 });
 
 test("It constructs an issue request url", () => {
   const client = newClient();
   const url = client.issueUrl("MyType", { my: "data" }, "12345");
   expect(url).toBeDefined();
+  expect(url).toMatch(/issue\?token=/);
 });
 
 test("It handles issue responses", () => {
