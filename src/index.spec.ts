@@ -5,7 +5,9 @@ import { sign } from "jsonwebtoken";
 const ID = "my";
 const SECRET = "secret";
 
-function newClient(options?: SSIClientOptions) {
+function newClient(
+  options: SSIClientOptions = { callbackUrl: "http://localhost?response=" }
+) {
   return new SSIClient(ID, SECRET, options);
 }
 
@@ -57,6 +59,23 @@ test("It handles issue responses", () => {
   const response = client.parseIssueResponse(token);
 
   expect(response).toMatchObject(payload);
+});
+
+test("It handles missing callback parameters", () => {
+  const client = newClient({});
+  expect(() => client.issueUrl("MyType", { my: "data" }, "12345")).toThrow();
+});
+
+test("It accepts callback urls per request", () => {
+  const client = newClient({});
+  const url = client.issueUrl(
+    "MyType",
+    { my: "data" },
+    "12345",
+    "myCallback?token="
+  );
+  expect(url).toBeDefined();
+  expect(url).toMatch(/issue\?token=/);
 });
 
 test("It handles malformed issue responses", () => {

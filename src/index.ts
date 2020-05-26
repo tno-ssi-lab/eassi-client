@@ -3,9 +3,10 @@ import { sign, verify, SignOptions, VerifyOptions } from "jsonwebtoken";
 export interface SSIClientOptions {
   url?: string;
   name?: string;
+  callbackUrl?: string;
 }
 
-export type SSIData = Record<string, string | number | boolean | null>;
+export type SSIData = Record<string, string | number | boolean>;
 
 export type SSIFunction = "verify" | "issue";
 
@@ -31,6 +32,7 @@ export type CredentialIssueResponse = CredentialResponse;
 export default class SSIClient {
   private url = "https://ssi-provider.sensorlab.tno.nl/";
   private name = "ssi-service-provider";
+  private callbackUrl?: string;
 
   constructor(
     private clientId: string,
@@ -48,19 +50,32 @@ export default class SSIClient {
     if (options.name) {
       this.name = options.name;
     }
+
+    if (options.callbackUrl) {
+      this.callbackUrl = options.callbackUrl;
+    }
   }
 
-  verifyUrl(type: string, requestId: string): string {
+  verifyUrl(type: string, requestId: string, callbackUrl?: string): string {
+    const callback = this.getCallbackUrl(callbackUrl);
+
     const token = this.encodeJWT(
-      { type },
+      { type, callbackUrl: callback },
       { subject: "credential-verify-request", jwtid: requestId }
     );
     return this.constructRequestUrl("verify", token);
   }
 
-  issueUrl(type: string, data: SSIData, requestId: string): string {
+  issueUrl(
+    type: string,
+    data: SSIData,
+    requestId: string,
+    callbackUrl?: string
+  ): string {
+    const callback = this.getCallbackUrl(callbackUrl);
+
     const token = this.encodeJWT(
-      { type, data },
+      { type, data, callbackUrl: callback },
       { subject: "credential-issue-request", jwtid: requestId }
     );
     return this.constructRequestUrl("issue", token);
@@ -90,6 +105,18 @@ export default class SSIClient {
       connector: response.connector,
       requestId: response.requestId,
     };
+  }
+
+  private getCallbackUrl(callbackUrl?: string) {
+    const callback = callbackUrl || this.callbackUrl;
+
+    if (!callback) {
+      throw new Error(
+        "Please specify a callback url either through the client instance or per request."
+      );
+    }
+
+    return callback;
   }
 
   private constructRequestUrl(endpoint: SSIFunction, token: string) {
