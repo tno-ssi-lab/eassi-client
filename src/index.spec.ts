@@ -1,4 +1,3 @@
-// import scream, { addExclamationPoints } from "../src/index";
 import SSIClient, { SSIClientOptions } from "../src/index";
 import { sign } from "jsonwebtoken";
 
