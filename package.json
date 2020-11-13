@@ -1,5 +1,5 @@
 {
-  "name": "ssi-client",
+  "name": "@tno/ssi-client",
   "version": "0.0.1",
   "description": "A simple client for interacting with the SSI Service Provider.",
   "main": "./dist/index.js",
