@@ -30,7 +30,7 @@ export interface CredentialVerifyResponse extends CredentialResponse {
 export type CredentialIssueResponse = CredentialResponse;
 
 export default class SSIClient {
-  private url = "https://ssi-provider.sensorlab.tno.nl/";
+  private url = "https://service.ssi-lab.nl/";
   private name = "ssi-service-provider";
   private callbackUrl?: string;
 
