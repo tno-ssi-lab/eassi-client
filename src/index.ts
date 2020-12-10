@@ -11,7 +11,7 @@ export type SSIData = Record<string, string | number | boolean>;
 export type SSIFunction = "verify" | "issue";
 
 enum ResponseStatus {
-  success = "succes",
+  success = "success",
   error = "error",
   cancelled = "cancelled",
 }
