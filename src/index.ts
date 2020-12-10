@@ -23,8 +23,9 @@ export interface CredentialResponse {
   connector: string;
 }
 
-export interface CredentialVerifyResponse extends CredentialResponse {
-  data: SSIData;
+export interface CredentialVerifyResponse<T = SSIData>
+  extends CredentialResponse {
+  data: T;
 }
 
 export type CredentialIssueResponse = CredentialResponse;
@@ -81,7 +82,7 @@ export default class SSIClient {
     return this.constructRequestUrl("issue", token);
   }
 
-  parseVerifyResponse(token: string): CredentialVerifyResponse {
+  parseVerifyResponse<T = SSIData>(token: string): CredentialVerifyResponse<T> {
     const response = this.decodeJWT(token, {
       subject: "credential-verify-response",
     }) as any;
