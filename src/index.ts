@@ -120,8 +120,7 @@ export default class SSIClient {
   }
 
   private constructRequestUrl(endpoint: SSIFunction, token: string) {
-    const url = new URL(endpoint, this.url);
-    url.search = `?token=${token}`;
+    const url = new URL(`${endpoint}/${token}`, this.url);
     return url.toString();
   }
 

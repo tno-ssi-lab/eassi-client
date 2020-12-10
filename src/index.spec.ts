@@ -26,18 +26,22 @@ test("It instantiates with the name option", () => {
   });
 });
 
+test("It instantiates without extra options", () => {
+  new SSIClient(ID, SECRET);
+});
+
 test("It constructs a verify request url", () => {
   const client = newClient();
   const url = client.verifyUrl("MyType", "12345");
   expect(url).toBeDefined();
-  expect(url).toMatch(/verify\?token=/);
+  expect(url).toMatch(/verify\//);
 });
 
 test("It constructs an issue request url", () => {
   const client = newClient();
   const url = client.issueUrl("MyType", { my: "data" }, "12345");
   expect(url).toBeDefined();
-  expect(url).toMatch(/issue\?token=/);
+  expect(url).toMatch(/issue\//);
 });
 
 test("It handles issue responses", () => {
@@ -74,7 +78,7 @@ test("It accepts callback urls per request", () => {
     "myCallback?token="
   );
   expect(url).toBeDefined();
-  expect(url).toMatch(/issue\?token=/);
+  expect(url).toMatch(/issue\//);
 });
 
 test("It handles malformed issue responses", () => {
